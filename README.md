@@ -1,5 +1,7 @@
 # pycw
 
+![Project Version](https://img.shields.io/pypi/v/pycw) ![Python Version](https://img.shields.io/pypi/pyversions/pycw)
+
 Python Morse Code Generator
 
 Generate Morse Code (CW) audio files in Python.
