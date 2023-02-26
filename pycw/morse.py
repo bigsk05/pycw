@@ -78,7 +78,7 @@ def generate(
     ) -> numpy.array:
     text = normalize_text(text)
     samples = list(_generate_samples(text, wpm, tone, volume, sample_rate))
-    return numpy.concatenate(samples)
+    return numpy.concatenate(samples).tobytes()
 
 
 def stream_wave(
