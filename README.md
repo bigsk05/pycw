@@ -30,7 +30,7 @@ Or `import pycw` and then use functions in your code, for example:
 ```
 import pycw
 
-pycw.output_wave("Intro.wav", "CQ CQ CQ DE BG5AWO BG5AWO BG5AWO PSE K", 20)
+pycw.output_wave("Intro.wav", "CQ CQ CQ DE BD8CMN BD8CMN BD8CMN PSE K", 20)
 ```
 
 Then you can get a output file called `Intro.wav` in your working directory.
