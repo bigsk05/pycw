@@ -7,15 +7,22 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: node-24-alpine
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - run: pip install numpy pytest
-      - run: pytest tests/ -q
-      - name: CLI roundtrip check
+      - name: Install python + numpy + pytest (alpine/musl)
+        shell: sh
         run: |
-          python -m pycw -t "cq cq de bd8cmn" -s 20 -n 700 -r 16000 -o /tmp/t.wav
-          test "$(python -m pycw -d /tmp/t.wav)" = "cq cq de bd8cmn"
+          set -e
+          sed -i 's#https\?://dl-cdn.alpinelinux.org/alpine#https://mirrors.aliyun.com/alpine#g' /etc/apk/repositories
+          apk update
+          apk add --no-cache python3 py3-pip py3-numpy
+          python3 -m pip install --quiet pytest
+      - name: Decoder tests (golden parity, round trips, no-torch guard)
+        shell: sh
+        run: python3 -m pytest tests/ -q
+      - name: CLI roundtrip check
+        shell: sh
+        run: |
+          python3 -m pycw -t "cq cq de bd8cmn" -s 20 -n 700 -r 16000 -o /tmp/t.wav
+          test "$(python3 -m pycw -d /tmp/t.wav)" = "cq cq de bd8cmn"
