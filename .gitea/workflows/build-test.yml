@@ -10,17 +10,17 @@ env:
 
 jobs:
   test:
-    runs-on: ubuntu-24-04
+    runs-on: node-24-debian
     steps:
-      # actions/checkout is mirrored locally on this Gitea and works offline
+      # actions/checkout is mirrored locally on this Gitea; needs node (present)
       - uses: actions/checkout@v4
       - name: Bootstrap python (apt via Tsinghua mirror, no setup-python)
         run: |
           set -e
-          sed -i 's|http://archive.ubuntu.com/ubuntu|https://mirrors.tuna.tsinghua.edu.cn/ubuntu|g; s|http://security.ubuntu.com/ubuntu|https://mirrors.tuna.tsinghua.edu.cn/ubuntu|g' /etc/apt/sources.list.d/ubuntu.sources 2>/dev/null || true
-          sed -i 's|http://archive.ubuntu.com/ubuntu|https://mirrors.tuna.tsinghua.edu.cn/ubuntu|g; s|http://security.ubuntu.com/ubuntu|https://mirrors.tuna.tsinghua.edu.cn/ubuntu|g' /etc/apt/sources.list 2>/dev/null || true
+          sed -i 's|http://deb.debian.org/debian-security|https://mirrors.tuna.tsinghua.edu.cn/debian-security|g; s|http://security.debian.org/debian-security|https://mirrors.tuna.tsinghua.edu.cn/debian-security|g; s|http://deb.debian.org/debian|https://mirrors.tuna.tsinghua.edu.cn/debian|g' /etc/apt/sources.list.d/debian.sources 2>/dev/null || true
+          sed -i 's|http://deb.debian.org/debian-security|https://mirrors.tuna.tsinghua.edu.cn/debian-security|g; s|http://security.debian.org/debian-security|https://mirrors.tuna.tsinghua.edu.cn/debian-security|g; s|http://deb.debian.org/debian|https://mirrors.tuna.tsinghua.edu.cn/debian|g' /etc/apt/sources.list 2>/dev/null || true
           apt-get update -qq
-          apt-get install -y -qq python3 python3-venv python3-pip
+          apt-get install -y -qq git python3 python3-venv python3-pip
           python3 -m venv /opt/venv
       - name: Install deps (numpy + pytest via Tsinghua PyPI)
         run: /opt/venv/bin/pip install --quiet numpy pytest
