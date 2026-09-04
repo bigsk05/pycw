@@ -9,13 +9,21 @@ jobs:
   test:
     runs-on: ubuntu-24-04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - run: pip install numpy pytest
-      - run: pytest tests/ -q
+      - name: Checkout (native git clone, no actions/*)
+        run: |
+          set -e
+          git clone --depth 1 https://git.ghink.net/bigsk/pycw.git .
+      - name: Bootstrap python (apt + venv)
+        run: |
+          set -e
+          apt-get update -qq
+          apt-get install -y -qq git python3 python3-venv python3-pip
+          python3 -m venv /opt/venv
+      - name: Install deps (numpy + pytest)
+        run: /opt/venv/bin/pip install --quiet numpy pytest
+      - name: Decoder tests (golden parity, round trips, no-torch guard)
+        run: /opt/venv/bin/python -m pytest tests/ -q
       - name: CLI roundtrip check
         run: |
-          python -m pycw -t "cq cq de bd8cmn" -s 20 -n 700 -r 16000 -o /tmp/t.wav
-          test "$(python -m pycw -d /tmp/t.wav)" = "cq cq de bd8cmn"
+          /opt/venv/bin/python -m pycw -t "cq cq de bd8cmn" -s 20 -n 700 -r 16000 -o /tmp/t.wav
+          test "$(/opt/venv/bin/python -m pycw -d /tmp/t.wav)" = "cq cq de bd8cmn"
