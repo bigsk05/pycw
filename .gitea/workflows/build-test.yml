@@ -6,7 +6,7 @@ on:
   pull_request:
 
 env:
-  PIP_INDEX_URL: http://mirrors.98e-1.net/pypi/simple   # pip: Tsinghua mirror
+  PIP_INDEX_URL: http://mirrors.98e-1.net/pypi/simple
 
 jobs:
   test:
@@ -14,7 +14,7 @@ jobs:
     steps:
       # actions/checkout is mirrored locally on this Gitea; needs node (present)
       - uses: actions/checkout@v4
-      - name: Bootstrap python (apt via Tsinghua mirror, no setup-python)
+      - name: Bootstrap python
         run: |
           set -e
           sed -i 's|http://deb.debian.org/debian-security|http://mirrors.98e-1.net/debian-security|g; s|http://security.debian.org/debian-security|http://mirrors.98e-1.net/debian-security|g; s|http://deb.debian.org/debian|http://mirrors.98e-1.net/debian|g' /etc/apt/sources.list.d/debian.sources 2>/dev/null || true
@@ -22,8 +22,8 @@ jobs:
           apt-get update -qq
           apt-get install -y -qq git python3 python3-venv python3-pip
           python3 -m venv /opt/venv
-      - name: Install deps (numpy + pytest via Tsinghua PyPI)
-        run: /opt/venv/bin/pip install --quiet numpy pytest
+      - name: Install deps
+        run: /opt/venv/bin/pip install --quiet numpy pytest --trusted-host mirrors.98e-1.net
       - name: Decoder tests (golden parity, round trips, no-torch guard)
         run: /opt/venv/bin/python -m pytest tests/ -q
       - name: CLI roundtrip check
