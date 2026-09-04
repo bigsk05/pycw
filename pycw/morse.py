@@ -123,9 +123,9 @@ def _generate_samples(
     samples = {
         DIT: generate_sin_wave(tone, dit_duration, **audio_params),
         DAH: generate_sin_wave(tone, dah_duration, **audio_params),
-        SYMBOL_SPACE: generate_silence(symbol_space_duration),
-        LETTER_SPACE: generate_silence(letter_space_duration),
-        WORD_SPACE: generate_silence(word_space_duration),
+        SYMBOL_SPACE: generate_silence(symbol_space_duration, sample_rate),
+        LETTER_SPACE: generate_silence(letter_space_duration, sample_rate),
+        WORD_SPACE: generate_silence(word_space_duration, sample_rate),
     }
 
     def _encode_letter(letter: str):

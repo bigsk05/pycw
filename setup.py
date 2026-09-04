@@ -30,6 +30,11 @@ setup(
     install_requires=[
         'numpy',
     ],
+    extras_require={
+        # torch is only needed to (re)train models in the cw-train repository;
+        # runtime decoding is numpy-only.
+        'train': ['torch>=2.0'],
+    },
     classifiers=[
         'License :: OSI Approved :: Apache Software License',
         # 'Programming Language :: Python :: 3',
@@ -48,6 +53,9 @@ setup(
     entry_points={
         'console_scripts': ['pycw=pycw.__main__:main'],
     },
-    package_data={'': ['README.md']},
+    package_data={
+        '': ['README.md'],
+        'pycw.decoder': ['model.bin'],
+    },
     include_package_data=True,
     zip_safe=False)

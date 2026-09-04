@@ -22,7 +22,17 @@ def main():
                 help='Sample rate (default: 44100)')
     parser.add_argument('-o', '--output',
                 help='Name of the output file')
+    parser.add_argument('-d', '--decode',
+                help='Decode a WAV file into Morse text (neural decoder)')
+    parser.add_argument('--decoder-tone', type=int, default=None,
+                help='Fixed tone for decoding (default: auto-detect)')
     args = parser.parse_args()
+
+    if args.decode:
+        from .decoder import decode_wav
+        text = decode_wav(args.decode, tone=args.decoder_tone)
+        print(text)
+        return
 
     if not args.input:
         with open(args.input, "r") as fb:
